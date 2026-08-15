@@ -26,7 +26,7 @@ app.add_middleware(
 # -------------------------------------------------------------
 # 1. LOAD ARTIFACTS FROM HUGGING FACE MODEL HUB
 # -------------------------------------------------------------
-REPO_ID = "Chiranjivzope25/axle-lock-models"
+REPO_ID = "Chiranjivzope25/locomotive"
 
 try:
     # Download files from your Hugging Face model repository
