@@ -4,7 +4,7 @@ import pandas as pd
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
-from huggingface_hub import hf_hub_download
+
 import uvicorn
 
 
@@ -26,22 +26,17 @@ app.add_middleware(
 # -------------------------------------------------------------
 # 1. LOAD ARTIFACTS FROM HUGGING FACE MODEL HUB
 # -------------------------------------------------------------
-REPO_ID = "Chiranjivzope25/locomotive"
+
 
 try:
     # Download files from your Hugging Face model repository
-    path_kinematic = hf_hub_download(repo_id=REPO_ID, filename="axle_lock_xgb.joblib")
-    path_transformer_kin = hf_hub_download(repo_id=REPO_ID, filename="power_transformer.joblib")
-    
-    path_phy = hf_hub_download(repo_id=REPO_ID, filename="phy_axle_lock_xgb.joblib")
-    path_transformer_phy = hf_hub_download(repo_id=REPO_ID, filename="phy_power_transformer.joblib")
-
+   
     # Load artifacts using joblib
-    model_kinematic = joblib.load(path_kinematic)
-    transformer_kinematic = joblib.load(path_transformer_kin)
+    model_kinematic = joblib.load("models/axle_lock_xgb.joblib")
+    transformer_kinematic = joblib.load("models/power_transformer.joblib")
 
-    model_phy = joblib.load(path_phy)
-    transformer_phy = joblib.load(path_transformer_phy)
+    model_phy = joblib.load("models/phy_axle_lock_xgb.joblib")
+    transformer_phy = joblib.load("models/phy_power_transformer.joblib")
 
     print("✅ All ML models and transformers loaded successfully from Hugging Face!")
 except Exception as e:
@@ -158,5 +153,3 @@ def predict(request: DualModelRequest):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
             detail=f"Inference Error: {str(e)}"
         )
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=7860, reload=False)
